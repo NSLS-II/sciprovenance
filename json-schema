@@ -1,0 +1,53 @@
+{
+  "%schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Sample Schema",
+  "description": "Metadata schema for samples at NSLS-II",
+  "type": "object",
+  "properties": {
+    "sample": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "research_group": { "type": "string" },
+        "lead_experimenter": { "type": "string" },
+        "sample_maker": { "type": "string" },
+        "collaborators": { "type": "string" },
+        "preparation_date": { "type": "string" },
+        "cif_url": { "type": "string" },
+        "cif_database_id": { "type": "string" },
+        "component": {
+          "type": ["array", "object"],
+          "properties": {
+            "name": { "type": "string" },
+            "chemical_formula": { "type": "string" },
+            "chemical_name_common": { "type": "string" },
+            "chemical_name_mineral": { "type": "string" },
+            "phase_state": { "type": ["array", "string"] },
+          },
+          "required": ["name", "chemical_formula", "phase_state"],
+        },
+        "tags": { "type": ["array", "string"] },
+      },
+      "required": ["name", "research_group", "lead_experimentor", "sample_maker", "component"],
+    },
+    "container": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "geometry": { "type": "string" },
+        "dimensions": { "type": "string" },
+        "description": { "type": "string" },
+        "component": {
+          "type": ["array", "object"],
+          "properties": {
+            "name": { "type": "string" },
+            "chemical_formula": { "type": "string" },
+            "chemical_name_common": { "type": "string" },
+            "chemical_name_mineral": { "type": "string" },
+            "sample_dilutant": { "type": "string" }
+          }
+        }
+      }  
+    }
+  }
+}
