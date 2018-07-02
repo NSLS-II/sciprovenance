@@ -7,6 +7,6 @@ setup(
     packages=find_packages(),
     description='materials schema',
     zip_safe=False,
-    package_data={'xpdan': ['config/*']},
+    package_data={'sci_provanance': ['schemas/*']},
     include_package_data=True,
 )
