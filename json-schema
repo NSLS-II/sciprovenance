@@ -9,22 +9,18 @@
       "properties": {
         "name": { 
           "type": "string",
-          "required": True,
           "minLength": 1
         },
         "research_group": {
           "type": "string",
-          "required": True,
           "minLength": 1
         },
         "lead_experimenter": { 
           "type": "string",
-          "required": True,
           "minLength": 1
         },
         "sample_maker": {
           "type": "string",
-          "required": True,
           "minLength": 1
         },
         "collaborators": {
@@ -44,12 +40,10 @@
           "properties": {
             "name": { 
               "type": "string",
-              "required": True,
               "minLength": 1
             },
             "chemical_formula": {
               "type": "string",
-              "required": True,
               "minLength": 1
             },
             "chemical_name_common": { 
@@ -60,7 +54,6 @@
             },
             "phase_state": { 
               "type": ["array", "string"],
-              "required": True,
               "minLength": 1
             },
           },
