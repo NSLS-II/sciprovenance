@@ -28,7 +28,7 @@ except Exception as e: print(e)
 else:
   print("You are connected!")
 
-# need to download document as a txt file using Google APIs
+# need to download spreadsheet as a csv file using Google APIs
 # part of this code was taken from wescpy.blogspot.com
 # must have Google APIs set up with Google account, see Google Drive APIs Quickstart for help
 
