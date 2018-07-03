@@ -61,16 +61,17 @@ if files: # if file was found
     schema = Hone.get_schema(fn)
     result = Hone.convert(fn)
     as_string = json.dumps(result) # convert resulting list into string
-    remove_brackets = as_string[1:-1] # delete outside [ ]
-    replace_all_dashes = remove_brackets.replace('-', '_') # replace dashes with underscores
-    final_result = json.loads(replace_all_dashes) # convert string into dictionary
-    with open('validation_schema.txt', 'r') as file: # must have updated validation schema saved as txt file
-      loaded_schema = file.read()
-      validation_schema = ast.literal_eval(loaded_schema)
-      validate(final_result, validation_schema)
-    print('Validation complete!') # prints only if no error occurs on validation step
-    doc_id = coll.insert_one(final_result).inserted_id # insert validated schema into MongoDB, only occurs if there is no error
-    print('The ID for this document is: ', doc_id)
+    replace_all_dashes = as_string.replace('-', '_') # replace dashes with underscores
+    final_result = json.loads(replace_all_dashes) # convert string back into list of dictionaries
+    # since result is a list, iterate validation over each item:
+    for data in final_result:
+      with open('validation_schema.txt', 'r') as file: # must have updated validation schema saved as txt file
+        loaded_schema = file.read()
+        validation_schema = ast.literal_eval(loaded_schema)
+        validate(data, validation_schema)
+        print('Validation complete!') # prints only if no error occurs on validation step
+        doc_id = coll.insert_one(data).inserted_id # insert validated schema into MongoDB, only occurs if there is no error
+        print('The ID for this document is: ', doc_id)
   else:
     print('ERROR (could not download file)')
 else:
