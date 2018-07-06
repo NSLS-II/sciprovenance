@@ -60,6 +60,29 @@ if files: # if file was found
     Hone = hone.Hone() # convert csv file to nested json format, result is a list
     schema = Hone.get_schema(fn)
     result = Hone.convert(fn)
+    split_dict_list = []
+    for d in result:
+      split_dict = {}
+      for key, value in d.items():
+        if isinstance(value, str) == True and ';' in value:
+          split_dict[key] = value.split(';')
+        elif isinstance(value, dict) == True:
+          split_dict[key] = {}
+          for new_key, new_value in value.items():
+            if isinstance(new_value, str) == True and ';' in new_value:
+              split_dict[key][new_key] = new_value.split(';')
+            elif isinstance(new_value, dict) == True:
+              split_dict[key][new_key] = {}
+              for next_key, next_value in new_value.items():
+                if isinstance(next_value, str) == True and ';' in next_value:
+                  split_dict[key][new_key][next_key] = next_value.split(';')
+                else:
+                  split_dict[key][new_key][next_key] = next_value
+            else:
+              split_dict[key][new_key] = new_value
+        else:
+          split_dict[key] = value
+      split_dict_list.append(split_dict)
     as_string = json.dumps(result) # convert resulting list into string
     replace_all_dashes = as_string.replace('-', '_') # replace dashes with underscores
     final_result = json.loads(replace_all_dashes) # convert string back into list of dictionaries
