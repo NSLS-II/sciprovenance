@@ -40,18 +40,18 @@
           "type": ["array", "object"],
           "properties": {
             "name": { 
-              "type": "string",
+              "type": ["array", "string"],
               "minLength": 1
             },
             "chemical_formula": {
-              "type": "string",
+              "type": ["array", "string"],
               "minLength": 1
             },
             "chemical_name_common": { 
-              "type": "string"
+              "type": ["array", "string"]
             },
             "chemical_name_mineral": { 
-              "type": "string" 
+              "type": ["array", "string"]
             },
             "phase_state": { 
               "type": ["array", "string"],
@@ -83,19 +83,19 @@
           "type": ["array", "object"],
           "properties": {
             "name": { 
-              "type": "string" 
+              "type": ["array", "string"]
             },
             "chemical_formula": { 
-              "type": "string"
+              "type": ["array", "string"]
             },
             "chemical_name_common": { 
-              "type": "string"
+              "type": ["array", "string"]
             },
             "chemical_name_mineral": { 
-              "type": "string"
+              "type": ["array", "string"]
             },
             "sample_dilutant": {
-              "type": "string"
+              "type": ["array", "string"]
             }
           }
         }
