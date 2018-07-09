@@ -7,6 +7,6 @@ setup(
     packages=find_packages(),
     description='materials schema',
     zip_safe=False,
-    package_data={'sciprovanance': ['schemas/*']},
+    package_data={'sciprovenance': ['schemas/*']},
     include_package_data=True,
 )
