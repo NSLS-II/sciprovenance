@@ -90,7 +90,7 @@ if files: # if file was found
     number = 0
     for data in final_result:
       number += 1
-      with open('validation_schema.txt', 'r') as file: # must have updated validation schema saved as txt file
+      with open('materials.json', 'r') as file:
         loaded_schema = file.read()
         validation_schema = ast.literal_eval(loaded_schema)
         validate(data, validation_schema)
