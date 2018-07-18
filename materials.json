@@ -12,157 +12,139 @@
           "minLength": 1,
           "description": "The name of the sample."
         },
-        "research_group": {
+        "sample_group_PI": {
           "type": "string",
-          "description": "The research group from the home facility that the user belongs to.",
-          "minLength": 1
-        },
-        "lead_experimenter": { 
-          "type": "string",
-          "description": "The primary user that will be present at the beamline for this experiment.",
-          "minLength": 1
+          "description": "The principle investigator of the group making the sample."
         },
         "sample_maker": {
           "type": "string",
-          "description": "The maker of the sample being tested.",
+          "description": "The maker of the sample.",
           "minLength": 1
         },
         "collaborators": {
           "type": "string",
-          "description": "Collaborators to the experiment."
+          "description": "Other members of the sample making team."
         },
-        "preparation_start_date": {
+        "sample_prep_start_date": {
           "type": "string",
           "format": "date",
           "description": "The date the sample preparation began."
         },
-        "cif_url": { 
-          "type": "string",
-          "description": "The URL to the crystallographic information of the sample."
-        },
-        "cif_database_id": { 
-          "type": "string",
-          "description": "The database ID for the crystallographic information from the CIF database."
-        },
-        "components": {
+        "constituents": {
           "type": ["array", "object"],
           "properties": {
             "name": { 
-              "type": ["array", "string"],
-              "description": "Name(s) of sample component(s).",
+              "type": "string",
+              "description": "Name of sample constituent.",
               "minLength": 1
             },
             "chemical_formula": {
-              "type": ["array", "string"],
-              "description": "Chemical formula(s), if known, of the sample component(s)."
+              "type": "string",
+              "description": "Chemical formula, if known, of the sample constituent."
             },
             "chemical_name_common": { 
               "type": ["array", "string"],
-              "description": "Common name(s), if any, of the sample component(s)."
+              "description": "Common name(s), if any, of the sample constituent."
             },
             "chemical_name_mineral": { 
               "type": ["array", "string"],
-              "description": "Mineral name(s), if any, of the sample component(s)."
+              "description": "Mineral name(s), if any, of the sample constituent."
             },
             "phase_state": { 
               "type": ["array", "string"],
-              "description": "The phase state(s), such as powder or solution, that the sample component is in."
+              "description": "The phase state(s), such as powder or solution, that the sample constituent is in."
+            },
+            "cif_url": { 
+              "type": "string",
+              "description": "The URL to the crystallographic information of the sample constituent."
+            },
+            "cif_database_id": { 
+              "type": ["object", "array", "string"],
+              "description": "The database ID for the crystallographic information from the CIF database."
             }
           }
         },
         "tags": {
           "type": ["array", "string"],
           "description": "Users may enter in tags for personal use."
-        }
-      }
-    },
-    "in_beam_container": {
-      "type": "object",
-      "description": "Container items that are intended to be within the range of the beam.",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "The name of the container."
         },
-        "geometry": {
-          "type": "string",
-          "description": "The geometry of the container."
-        },
-        "dimensions": { 
-          "type": "string",
-          "description": "The relevant dimensions of the container."
-        },
-        "description": {
-          "type": "string",
-          "description": "A description of the container."
-        },
-        "components": {
-          "type": ["array", "object"],
+        "container" : {
+          "type": "object",
+          "description": "The container holding the sample."
           "properties": {
-            "name": { 
-              "type": ["array", "string"],
-              "description": "Name(s) of container component(s)."
+            "geometry": {
+              "type": "object",
+              "description": "The geometry of the container.",
+              "properties": {
+                "holder_type": {
+                  "type": "string",
+                  "description": "The type of holder (eg capillary)."
+                },
+                "diameter_mm": {
+                  "type": "string",
+                  "description": "The diamater of the container in millimeters."
+                },
+                "length_mm": {
+                  "type": "string",
+                  "description": "The length of the container in millimeters."
+                }
+              }
             },
-            "chemical_formula": { 
-              "type": ["array", "string"],
-              "description": "Chemical formula(s), if known, of the container component(s)."
-            },
-            "chemical_name_common": { 
-              "type": ["array", "string"],
-              "description": "Common name(s), if any, of the container component(s)."
-            },
-            "chemical_name_mineral": { 
-              "type": ["array", "string"],
-              "description": "Mineral name(s), if any, of the container component(s)."
-            },
-            "sample_dilutant": {
-              "type": ["array", "string"],
-              "description": "The name of the sample dilutant, if any are present."
+            "in_beam_constituents": {
+              "type": ["array", "object"],
+              "description": "Container constituents that are intended to be within the range of the beam.",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The name of the constituent."
+                },
+                "description": {
+                  "type": "string",
+                  "description": "A description of the constituent."
+                },
+                "chemical_formula": { 
+                  "type": "string",
+                  "description": "Chemical formula, if known, of the container constituent."
+                },
+                "chemical_name_common": { 
+                  "type": ["array", "string"],
+                  "description": "Common name(s), if any, of the container constituent."
+                },
+                "chemical_name_mineral": { 
+                  "type": ["array", "string"],
+                  "description": "Mineral name(s), if any, of the container constituent."
+                },
+                "sample_dilutant": {
+                  "type": ["array", "string"],
+                  "description": "The name of the sample dilutant(s), if any are present."
+                }
+              }
             }
-        }
-    },
-    "out_of_beam_container": {
-      "type": "object",
-      "description": "Container items that are intended to be outside the range of the beam.",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "The name of the container."
-        },
-        "geometry": {
-          "type": "string",
-          "description": "The geometry of the container."
-        },
-        "dimensions": { 
-          "type": "string",
-          "description": "The relevant dimensions of the container."
-        },
-        "description": {
-          "type": "string",
-          "description": "A description of the container."
-        },
-        "components": {
-          "type": ["array", "object"],
-          "properties": {
-            "name": { 
-              "type": ["array", "string"],
-              "description": "Name(s) of container component(s)"
-            },
-            "chemical_formula": { 
-              "type": ["array", "string"],
-              "description": "Chemical formula(s), if known, of the container component(s)."
-            },
-            "chemical_name_common": { 
-              "type": ["array", "string"],
-              "description": "Common name(s), if any, of the container component(s)."
-            },
-            "chemical_name_mineral": { 
-              "type": ["array", "string"],
-              "description": "Mineral name(s), if any, of the container component(s)."
-            },
-            "sample_dilutant": {
-              "type": ["array", "string"],
-              "description": "The name of the sample dilutant, if any are present."
+            "out_of_beam_constituents": {
+              "type": ["array", "object"],
+              "description": "Container constituents that are intended to be outside the range of the beam.",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The name of the container constituent."
+                },
+                "description": {
+                  "type": "string",
+                  "description": "A description of the container constituent."
+                },
+                "chemical_formula": { 
+                  "type": "string",
+                  "description": "Chemical formula, if known, of the container constituent."
+                },
+                "chemical_name_common": { 
+                  "type": ["array", "string"],
+                  "description": "Common name(s), if any, of the container constituent."
+                },
+                "chemical_name_mineral": { 
+                  "type": ["array", "string"],
+                  "description": "Mineral name(s), if any, of the container constituent."
+                }
+              }
             }
           }
         }
