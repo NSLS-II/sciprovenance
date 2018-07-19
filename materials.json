@@ -34,12 +34,12 @@
           "type": ["array", "object"],
           "properties": {
             "name": { 
-              "type": "string",
+              "type": ["array", "string"],
               "description": "Name of sample constituent.",
               "minLength": 1
             },
             "chemical_formula": {
-              "type": "string",
+              "type": ["array", "string"],
               "description": "Chemical formula, if known, of the sample constituent."
             },
             "chemical_name_common": { 
@@ -55,7 +55,7 @@
               "description": "The phase state(s), such as powder or solution, that the sample constituent is in."
             },
             "cif_url": { 
-              "type": "string",
+              "type": ["array", "string"],
               "description": "The URL to the crystallographic information of the sample constituent."
             },
             "cif_database_id": { 
@@ -95,15 +95,15 @@
               "description": "Container constituents that are intended to be within the range of the beam.",
               "properties": {
                 "name": {
-                  "type": "string",
+                  "type": ["array", "string"],
                   "description": "The name of the constituent."
                 },
                 "description": {
-                  "type": "string",
+                  "type": ["array", "string"],
                   "description": "A description of the constituent."
                 },
                 "chemical_formula": { 
-                  "type": "string",
+                  "type": ["array", "string"],
                   "description": "Chemical formula, if known, of the container constituent."
                 },
                 "chemical_name_common": { 
@@ -125,15 +125,15 @@
               "description": "Container constituents that are intended to be outside the range of the beam.",
               "properties": {
                 "name": {
-                  "type": "string",
+                  "type": ["array", "string"],
                   "description": "The name of the container constituent."
                 },
                 "description": {
-                  "type": "string",
+                  "type": ["array", "string"],
                   "description": "A description of the container constituent."
                 },
                 "chemical_formula": { 
-                  "type": "string",
+                  "type": ["array", "string"],
                   "description": "Chemical formula, if known, of the container constituent."
                 },
                 "chemical_name_common": { 
