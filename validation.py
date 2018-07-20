@@ -12,6 +12,8 @@ import hone
 import ast
 import pymongo
 import gspread
+import uuid
+import smtplib
 
 from apiclient import discovery
 from httplib2 import Http
@@ -21,7 +23,8 @@ from pymongo import MongoClient
 from sshtunnel import SSHTunnelForwarder
 
 EMAIL_ACCOUNT = "nslsii.provenance@gmail.com"
-PASSWORD = ""
+with open("gmail_password.txt", "r") as f:
+    PASSWORD = f.read()
 
 # Use 'INBOX' to read inbox.  Note that whatever folder is specified,
 # after successfully running this script all emails in that folder
@@ -29,6 +32,8 @@ PASSWORD = ""
 
 EMAIL_FOLDER = "INBOX"
 split_dict_list = []
+body_valid = "Your sample has passed the validation step and has been uploaded to our database! No further steps are needed."
+body_invalid = "Your sample has failed the validation step. Below is the error that occurred. Please make corrections and submit again."
 
 # splitting_dict splits fields that have multiple components into arrays.
 def splitting_dict(dicts):
@@ -80,6 +85,20 @@ def clear_spreadsheet(spreadsheet_id):
     worksheet.resize(rows=30)
     print("Spreadsheet cleared!")
 
+def send_email(recipient, body, info, error=' '):
+    sent_from = EMAIL_ACCOUNT
+    subject = 'Sample validation results'
+    email_text = "From: %s\nTo: %s\nSubject: %s\n\n%s\n\nYour sample information:\n%s\n\n%s" % (sent_from, recipient, subject, body, info, error)
+
+    try:
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.ehlo()
+        server.starttls()
+        server.sendmail(sent_from, recipient, email_text)
+        server.close()
+        print('Email sent!')
+    except Exception as e: print(e)
+
 # schema_checker downloads the spreadsheet, converts it to json format, and checks if it is valid
 # if valid, it then uploads to MongoDB and prints the resulting ID number for each sample uploaded
 def schema_checker(google_file):
@@ -93,6 +112,8 @@ def schema_checker(google_file):
             with open(fn, "wb") as f:
                 f.write(data)
             print("DONE")  # done exporting as csv file
+            with open(fn, 'a') as f:
+                f.write('a') # Hone conversion cuts off a letter at the end, so append a letter to be delted.
             Hone = hone.Hone()  # convert csv file to nested json format, result is a list
             schema = Hone.get_schema(fn)
             result = Hone.convert(fn)
@@ -101,14 +122,22 @@ def schema_checker(google_file):
             number = 0
             for data in split_dict_list:
                 number += 1
+                del data['Timestamp'] # Google Forms automatically creates this column, but we don't want it
+                user_email = data.pop('email') # we don't want to store this in the database
+                sample_information = json.dumps(data, sort_keys=True, indent=4, separators=(',', ': '))
                 with open("materials.json", "r") as file:
                     loaded_schema = file.read()
                     validation_schema = ast.literal_eval(loaded_schema)
-                validate(data, validation_schema)
-                print('Sample %s validation complete!' % number) # prints only if no error occurs during validation step
-                doc_id = coll.insert_one(data).inserted_id # insert validated schema into MongoDB
-                print('The ID for this document is: ', doc_id)
-                clear_spreadsheet(FILEID) # spreadsheet is only cleared if doc SUCCESSFULLY uploads to MongoDB
+                try:
+                    validate(data, validation_schema)
+                    print('Sample %s validation complete!' % number) # prints only if no error occurs during validation step
+                    doc_id = coll.insert_one(data).inserted_id # insert validated schema into MongoDB
+                    print('The ID for this document is: ', doc_id)
+                    clear_spreadsheet(FILEID) # spreadsheet is only cleared if doc SUCCESSFULLY uploads to MongoDB
+                    send_email(user_email, body_valid, sample_information)
+                except Exception as e:
+                    validation_error = 'Error: ' + str(e)
+                    send_email(user_email, body_invalid, sample_information, validation_error)
         else:
             print("ERROR: could not download file")
     else:
