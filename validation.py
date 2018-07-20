@@ -85,6 +85,9 @@ def clear_spreadsheet(spreadsheet_id):
     worksheet.resize(rows=30)
     print("Spreadsheet cleared!")
 
+# sends emails to users with the results of the validation step
+# all emails will include the entered sample information
+# invalid entries will also include the error that it raised
 def send_email(recipient, body, info, error=' '):
     sent_from = EMAIL_ACCOUNT
     subject = 'Sample validation results'
@@ -124,6 +127,7 @@ def schema_checker(google_file):
                 number += 1
                 del data['Timestamp'] # Google Forms automatically creates this column, but we don't want it
                 user_email = data.pop('email') # we don't want to store this in the database
+                data['_id'] = uuid.uuid4()
                 sample_information = json.dumps(data, sort_keys=True, indent=4, separators=(',', ': '))
                 with open("materials.json", "r") as file:
                     loaded_schema = file.read()
