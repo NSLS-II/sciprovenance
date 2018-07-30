@@ -53,13 +53,16 @@ def splitting_dict(dicts):
                         split_dict[key][new_key] = {}
                         for next_key, next_value in new_value.items():
                             next_key = next_key.replace("-", "_")
-                            if (
-                                isinstance(next_value, str) == True
-                                and ";" in next_value
-                            ):
-                                split_dict[key][new_key][next_key] = next_value.split(
-                                    ";"
-                                )
+                            if (isinstance(next_value, str) == True and ";" in next_value):
+                                split_dict[key][new_key][next_key] = next_value.split(";")
+                            elif isinstance(next_value, dict) == True:
+                                split_dict[key][new_key][next_key] = {}
+                                for last_key, last_value in next_value.items():
+                                    last_key = last_key.replace("-", "_")
+                                    if (isinstance(last_value, str) == True and ";" in last_value):
+                                        split_dict[key][new_key][next_key][last_key] = last_value.split(";")
+                                    else:
+                                        split_dict[key][new_key][next_key][last_key] = last_value
                             else:
                                 split_dict[key][new_key][next_key] = next_value
                     else:
@@ -67,7 +70,6 @@ def splitting_dict(dicts):
             else:
                 split_dict[key] = value
     split_dict_list.append(split_dict)
-
 
 # clear_spreadsheet clears the spreadsheet of all values (only keeping key names) using Google Sheets APIs
 def clear_spreadsheet(spreadsheet_id):
@@ -92,15 +94,13 @@ def send_email(recipient, body, info, error=' '):
     sent_from = EMAIL_ACCOUNT
     subject = 'Sample validation results'
     email_text = "From: %s\nTo: %s\nSubject: %s\n\n%s\n\nYour sample information:\n%s\n\n%s" % (sent_from, recipient, subject, body, info, error)
-
-    try:
-        server = smtplib.SMTP('smtp.gmail.com', 587)
-        server.ehlo()
-        server.starttls()
-        server.sendmail(sent_from, recipient, email_text)
-        server.close()
-        print('Email sent!')
-    except Exception as e: print(e)
+    
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.ehlo()
+    server.starttls()
+    server.sendmail(sent_from, recipient, email_text)
+    server.close()
+    print('Email sent!')
 
 # schema_checker downloads the spreadsheet, converts it to json format, and checks if it is valid
 # if valid, it then uploads to MongoDB and prints the resulting ID number for each sample uploaded
