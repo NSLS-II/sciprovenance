@@ -24,7 +24,6 @@ m.kind = "hinted"
 mm = hw.motor2
 mm.kind = "hinted"
 
-# TODO: run these through the SynSignalWithRegistry object
 
 class FullField:
     def __call__(self, *args, **kwargs):
@@ -46,8 +45,9 @@ class Pencil:
 
 
 f = FullField()
-# det = SynSignalWithRegistry(f, name="img", labels={"detectors"})
-det = SynSignal(f, name="img", labels={"detectors"})
+det = SynSignalWithRegistry(f, name="img", labels={"detectors"},
+                            save_path='/home/christopher/dev/provenance-driven-ldrd/demo/raw_data')
+# det = SynSignal(f, name="img", labels={"detectors"})
 det.kind = "hinted"
 
 # g = Pencil()
@@ -66,7 +66,7 @@ for i in range(8):
     for lll in ll:
         j = lll + interval
         j = round(j, 0)
-        if j not in l and j < 180:
+        if j not in l and j <= 180:
             l.append(j)
 # Run Full Field Scans, each scan has more slices, showing how we can minimize
 # the number of slices by interleaving them by half
@@ -74,7 +74,7 @@ RE(
     bp.list_scan(
         [det],
         m,
-        l[:4],
+        l[:64],
         md={
             "tomo": {
                 "type": "full_field",
@@ -110,6 +110,6 @@ RE.abort()
 # TODO: make tomo graph plot
 
 # TODO: make provenance tomo pipeline
+# TODO: Retrieve data in tomo pipeline
 # TODO: make DB insert more pipeline friendly
 # TODO: run replay on tomo data
-
