@@ -4,10 +4,34 @@ from xpdan.vend.callbacks.core import RunRouter
 from xpdan.vend.callbacks.zmq import RemoteDispatcher
 from xpdconf.conf import glbl_dict
 
-raw_config = {
-    "host": "localhost",
+from databroker_elasticsearch.converters import register_converter
+
+
+def filtertype(seq, tp):
+    return (o for o in seq if isinstance(o, tp))
+
+
+@register_converter
+def tomo_usednodes(graph):
+    nodes = []
+    fmt = '{mod}.{name}'
+    for n in graph['nodes']:
+        st = n['stream']
+        e = dict()
+        e['ndtype'] = fmt.format(**st)
+        ad = next(filtertype(st['args'], dict), None)
+        al = next(filtertype(st['args'], list), None)
+        if ad is not None:
+            e['ndfunc'] = fmt.format(**ad)
+        elif al is not None:
+            e['ndfunc'] = next(filtertype(al, str))
+        nodes.append(e)
+    return nodes
+
+
+raw_config = {"databroker-elasticsearch":
+                  {"host": "localhost",
     "index": "demo-raw",
-    "databroker-elasticsearch": {
         "docmap": [
             ["uid", "_id", "str"],
             ["comment"],
@@ -38,33 +62,16 @@ raw_config = {
 
 es_raw = ElasticCallback.from_config(raw_config)
 
-an_config = {"host": "localhost",
+an_config = {
+"databroker-elasticsearch":{
+    "host": "localhost",
     "index": "demo-an",
-    "databroker-elasticsearch": {
         "docmap": [
-            ["uid", "_id", "str"],
-            ["comment"],
-            ["cycle", "cycle", "int"],
-            ["detectors"],
-            ["e0"],
-            ["edge"],
-            ["element"],
-            ["element_full"],
-            ["experiment"],
-            ["group"],
-            ["name"],
-            ["num_points"],
-            ["plan_name"],
-            ["PI", "pi"],
-            ["PROPOSAL", "proposal"],
-            ["SAF", "saf"],
-            ["scan_id"],
-            ["time"],
-            ["trajectory_name"],
-            ["uid"],
-            ["year", "year", "int"],
-            ["time", "date", "toisoformat"],
-            ['sample_name']
+            ['uid', '_id'],
+            ['uid'],
+            ['parent_uids', 'puid', 'listofstrings'],
+            ['analysis_stage'],
+            ['graph', 'usednodes', 'tomo_usednodes'],
         ]
     },
 }
@@ -95,7 +102,7 @@ def run_server(
     d = RemoteDispatcher(outbound_proxy_address)
 
     d.subscribe(rr)
-    print("Starting Tomography Server")
+    print("Starting Elastic Ingest Server")
     d.start()
 
 

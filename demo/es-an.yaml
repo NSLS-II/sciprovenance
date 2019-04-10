@@ -1,0 +1,12 @@
+# Example configuration for ElasticIndex and ElasticCallback factory
+databroker-elasticsearch:
+  host: localhost
+  index: demo-an
+  docmap:
+    # brokername  [esname[=brokername]]  [converter[=noconversion]]
+    # the mapping must produce ES name "_id"
+    - [uid, _id]
+    - [uid]
+    - [parent_uids, puid, listofstrings]
+    - [analysis_stage]
+    - [graph, usednodes, tomo_usednodes]
