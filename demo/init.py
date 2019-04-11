@@ -1,4 +1,4 @@
-mport os
+import os
 import time
 
 import bluesky.plans as bp
@@ -55,7 +55,7 @@ def build_scan():
                 l.append(j)
     return l
 
-
+shots = 16
 RE(
     bp.list_scan(
         [det],
