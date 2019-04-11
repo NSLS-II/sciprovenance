@@ -1,7 +1,9 @@
 
 # conda install all the deps
 
-conda create -n ldrd_demo xpdan xpdtools shed rapidz
+conda create -n ldrd_demo xpdan xpdtools shed rapidz xonsh
+
+source activate ldrd_demo
 
 conda uninstall --force xpdan xpdtools shed rapidz
 
@@ -13,3 +15,5 @@ git@github.com:CJ-Wright/xpdAn.git (csi_demo)
 git@github.com:xpdAcq/xpdtools.git (master)
 git@github.com:xpdAcq/SHED.git (master)
 git@github.com:xpdAcq/rapidz.git (master)
+
+# Note that you will need to change the environment in the run.xsh to be ldrd_demo 

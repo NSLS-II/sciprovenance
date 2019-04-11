@@ -5,7 +5,8 @@
 #terminator -p xonsh -e "sh /home/christopher/elasticsearch/elasticsearch-6.6.1/bin/elasticsearch" &
 
 # start zmq proxy
-terminator -p xonsh -e "source activate dp_dev; bluesky-0MQ-proxy 5567 5568" &
+environment = 'dp_dev'
+terminator -p xonsh -e f"source activate {environment}; bluesky-0MQ-proxy 5567 5568" &
 
 # start data processing servers
 for c in [
@@ -14,4 +15,4 @@ for c in [
   'tomo_server',
   'python /home/christopher/dev/provenance-driven-ldrd/demo/elastic_server.py'
 ]:
-    terminator -p xonsh -e @(f"source activate dp_dev; {c}") &
+    terminator -p xonsh -e @(f"source activate {environment}; {c}") &
