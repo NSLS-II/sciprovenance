@@ -7,6 +7,7 @@ from databroker_elasticsearch.converters import register_converter
 def filtertype(seq, tp):
     return (o for o in seq if isinstance(o, tp))
 
+exclude_kwargs = set(('upstream',))
 
 @register_converter
 def tomo_usednodes(graph):
@@ -22,5 +23,9 @@ def tomo_usednodes(graph):
             e['ndfunc'] = fmt.format(**ad)
         elif al is not None:
             e['ndfunc'] = next(filtertype(al, str))
+        kw = {k: v for k, v in st['kwargs'].items()
+              if not k in exclude_kwargs}
+        if kw:
+            e['ndkwargs'] = kw
         nodes.append(e)
     return nodes
