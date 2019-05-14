@@ -1,7 +1,7 @@
 
 # conda install all the deps
 
-conda create -n ldrd_demo xpdan xpdtools shed rapidz xonsh
+conda create -n ldrd_demo xpdan xpdtools shed rapidz xonsh python-graphviz
 
 source activate ldrd_demo
 
